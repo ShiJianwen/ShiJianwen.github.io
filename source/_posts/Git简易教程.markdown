@@ -1,7 +1,7 @@
 title: Git简易教程
 date: 2015-07-13 9:37:10
 categories: "Git"
-
+tags: "git"
 
 ---
 ##命令
