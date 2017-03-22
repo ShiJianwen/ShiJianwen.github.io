@@ -79,5 +79,10 @@ deploy:
   type: git
   repo: https://github.com/ShiJianwen/ShiJianwen.github.io
 
+#RSS订阅
+plugin:
+- hexo-generator-feed
+
+
 
 
