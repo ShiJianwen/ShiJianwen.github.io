@@ -3,7 +3,9 @@ date: 2015-9-22 19:02:10
 categories: "JavaScript"
 
 ---
+
 &nbsp;&nbsp;&nbsp;&nbsp;HTML5 原生的表单验证默认是针对 form 表单的请求行为的，但是有时候我们在发送 ajax 请求时也需要用到原生表单的验证功能，具体例子如下：
+
 ```html
 <form onsubmit="return false;" id="myform"> //绑定 onsubmit 事件阻止原生表单请求
     用户名：<input name="username" type="text" required maxlength="10" />

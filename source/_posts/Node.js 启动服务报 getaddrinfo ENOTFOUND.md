@@ -1,6 +1,7 @@
 title: Node.js 启动服务报 getaddrinfo ENOTFOUND
 date: 2016-11-21 16:14:10
 categories: "node.js"
+tags: "bug异闻录"
 
 
 ---

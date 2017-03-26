@@ -1,6 +1,7 @@
 title: hexo 博客 next 主题 js 加载 404 问题
 date: 2016-11-21 0:48:10
 categories: "博客日志"
+tags: "bug异闻录"
 
 
 ---

@@ -4,7 +4,7 @@ categories: "Git"
 tags: "git"
 
 ---
-##命令
+## 命令
 
 ***初始化仓库***
 ```git
