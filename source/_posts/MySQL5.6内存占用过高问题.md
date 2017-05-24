@@ -32,7 +32,7 @@ InnoDB: mmap(137363456 bytes) failed; errno 12
 
 注意这个：`Fatal error: cannot allocate memory for the buffer pool`，说明是内存不足了，因为这时候进程已经挂掉了没办法看到内存占用情况，但我从 vps 的统计报表里面能看到当时的内存占用情况：
 
-![enter image description here](http://7xiuuj.com1.z0.glb.clouddn.com/QQ20170323-0.png)
+![](http://7xiuuj.com1.z0.glb.clouddn.com/QQ20170323-0.png)
 
 差不多 400M 的样子，吓得我赶紧搜了一下，结论是 mysql5.6 相对前代性能有大幅提升，但同时内存占用也是水涨船高，对于个人小站点来说，mysql5.6并不适用，所以如果你对数据库不太挑剔的话，还是建议用旧版本吧。如果你坚持使用5.6版本，那么要么升级你的内存，要么在配置文件里限制 mysql 的资源数，在 `/etc/my.cnf` 文件里面添加如下配置：
 

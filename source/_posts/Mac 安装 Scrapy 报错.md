@@ -5,7 +5,7 @@ tags: "bug异闻录"
 
 ----------
 
-![enter image description here](http://7xiuuj.com1.z0.glb.clouddn.com/wallhaven-423175.png)
+![](http://7xiuuj.com1.z0.glb.clouddn.com/wallhaven-423175.png)
 这个问题在 `OS X El Capitan` 普遍存在，后面会说明原因。
 
 前几天在 Mac 上安装 Scrapy，按照官方文档的步骤使用 pip 安装 scrapy 后报一个权限错误

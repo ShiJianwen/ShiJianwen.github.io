@@ -5,7 +5,7 @@ tags: "批判一番"
 
 ---
 
-![enter image description here](http://7xiuuj.com1.z0.glb.clouddn.com/Resident.png)
+![](http://7xiuuj.com1.z0.glb.clouddn.com/Resident.png)
 
 等啊等终于让我等来了生化终章的无删减版，工作日晚上熬着夜把电影看完，第二天起床后发现都忘记昨晚看的啥了。。。
 
