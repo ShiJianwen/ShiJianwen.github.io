@@ -7,7 +7,7 @@ title: 石建文
 subtitle: 
 description: 石建文的博客
 author: 石建文
-language: zh-CN
+language: zh-Hans
 timezone:
 
 # URL
@@ -63,7 +63,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: http://hexo.io/plugins/
 ## Themes: http://hexo.io/themes/
-theme: maupassant
+theme: next
 
 gentie: 03f9cedc3a564169a8d9fe2e9c6a53d7
 baidu_analytics: d361d5b48902151f1bf1968cd2f3b810
@@ -71,7 +71,6 @@ baidu_analytics: d361d5b48902151f1bf1968cd2f3b810
 # 社交链接，将在侧栏中显示
 social:
   GitHub: https://github.com/ShiJianwen
-  Weibo: http://weibo.com/3762333524/
   ZhiHu: http://www.zhihu.com/people/shi-jian-wen-73
 
 # Deployment
