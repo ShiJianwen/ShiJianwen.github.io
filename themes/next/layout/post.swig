@@ -30,12 +30,13 @@
   <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
   <script>
   var gitment = new Gitment({
+    id: window.location.pathname,
     owner: 'ShiJianwen',
     repo: 'BlogComments',
     oauth: {
       client_id: 'df438d22af243394e926',
       client_secret: 'b1ed1a79bb301c52462b4e82a55897ae0491566d',
-    },
+    }
   })
   gitment.render('container')
   </script>
