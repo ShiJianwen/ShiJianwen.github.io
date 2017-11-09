@@ -25,21 +25,27 @@
       {% endif %}
     </div>
   </div>
-  <div id="container"></div>
+  <!-- 来必力City版安装代码 -->
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTEwOS83NjU4">
+    <script type="text/javascript">
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+
+        if (typeof LivereTower === 'function') { return; }
+
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  </div>
+  <!-- City版安装代码已完成 -->
   <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
   <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-  <script>
-  var gitment = new Gitment({
-    id: window.location.pathname,
-    owner: 'ShiJianwen',
-    repo: 'BlogComments',
-    oauth: {
-      client_id: 'df438d22af243394e926',
-      client_secret: 'b1ed1a79bb301c52462b4e82a55897ae0491566d',
-    }
-  })
-  gitment.render('container')
-  </script>
+
 
 {% endblock %}
 

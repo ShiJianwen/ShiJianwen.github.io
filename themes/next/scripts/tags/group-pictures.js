@@ -800,6 +800,7 @@ var templates = {
   },
 
   getHTML: function (rows) {
+    console.log(rows);
     var rowHTML = '';
 
     for (var i = 0; i < rows.length; i++) {
