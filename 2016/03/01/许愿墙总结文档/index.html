@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="石建文, 石建文的博客" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="石建文" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="技术选型前端：Angular优点：声明式 UI、完善的指令系统、双向数据绑定、模块化、依赖注入、完整的 MVC 以及可以自定义的指令缺点：自带的路由模块功能比较弱，需要依靠第三方的 uiRouter，整体较笨重，不适合做交互频繁的网页，对于一个页面显示数据量较大的网页性能优化是一个问题，还有就是对 SEO 不友好。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="许愿墙总结文档">
+<meta property="og:url" content="http://shijianwen.github.io/2016/03/01/许愿墙总结文档/index.html">
+<meta property="og:site_name" content="石建文">
+<meta property="og:description" content="技术选型前端：Angular优点：声明式 UI、完善的指令系统、双向数据绑定、模块化、依赖注入、完整的 MVC 以及可以自定义的指令缺点：自带的路由模块功能比较弱，需要依靠第三方的 uiRouter，整体较笨重，不适合做交互频繁的网页，对于一个页面显示数据量较大的网页性能优化是一个问题，还有就是对 SEO 不友好。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-04T02:48:19.312Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="许愿墙总结文档">
+<meta name="twitter:description" content="技术选型前端：Angular优点：声明式 UI、完善的指令系统、双向数据绑定、模块化、依赖注入、完整的 MVC 以及可以自定义的指令缺点：自带的路由模块功能比较弱，需要依靠第三方的 uiRouter，整体较笨重，不适合做交互频繁的网页，对于一个页面显示数据量较大的网页性能优化是一个问题，还有就是对 SEO 不友好。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://shijianwen.github.io/2016/03/01/许愿墙总结文档/"/>
+
+
+
+
+
+  <title>许愿墙总结文档 | 石建文</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d361d5b48902151f1bf1968cd2f3b810";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">石建文</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Show you the code</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shijianwen.github.io/2016/03/01/许愿墙总结文档/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lowenshi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="石建文">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">许愿墙总结文档</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-01T23:10:10+08:00">
+                2016-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web-开发/" itemprop="url" rel="index">
+                    <span itemprop="name">Web 开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h2><h3 id="前端："><a href="#前端：" class="headerlink" title="前端："></a>前端：</h3><p><strong><em>Angular</em></strong><br>优点：声明式 UI、完善的指令系统、双向数据绑定、模块化、依赖注入、完整的 MVC 以及可以自定义的指令<br>缺点：自带的路由模块功能比较弱，需要依靠第三方的 uiRouter，整体较笨重，不适合做交互频繁的网页，对于一个页面显示数据量较大的网页性能优化是一个问题，还有就是对 SEO 不友好。<br><a id="more"></a></p>
+<h3 id="后端："><a href="#后端：" class="headerlink" title="后端："></a>后端：</h3><p><strong><em>Node.js</em></strong><br>优点：事件驱动以及非阻塞的异步 IO 使它能够很好地应对高并发场景，适合做 IO 密集型的应用<br>缺点：JS 的单线程限制使其很难利用服务器的多核资源，可靠性较低，一旦挂了就整个服务都崩溃了</p>
+<h3 id="数据库："><a href="#数据库：" class="headerlink" title="数据库："></a>数据库：</h3><p><strong><em>MongoDB</em></strong><br>优点：文档结构的存储方式，能够更好地管理数据，查询速度也更快，也能够减少磁盘 IO；JSON 风格的语法易于理解和掌握<br>缺点：不支持事务操作，占用空间较大（为避免产生磁盘碎片），删除记录后并不释放空间（为了避免大规模的数据移动）</p>
+<h3 id="其他："><a href="#其他：" class="headerlink" title="其他："></a>其他：</h3><p>静态资源存储使用<strong><em>七牛云存储</em></strong><br>实时消息的推送和实时消息传递使用 <strong><em>socket.io</em></strong><br>后端使用 <strong><em>Express</em></strong> 框架<br>开发环境配置使用 <strong><em>Gulp</em></strong><br>部署环境使用 <strong><em>BAE</em></strong></p>
+<h2 id="技术难点"><a href="#技术难点" class="headerlink" title="技术难点"></a>技术难点</h2><h3 id="1-如何把图片上传到七牛的过程跟微信-SDK-中的上传图片过程连接起来"><a href="#1-如何把图片上传到七牛的过程跟微信-SDK-中的上传图片过程连接起来" class="headerlink" title="1. 如何把图片上传到七牛的过程跟微信 SDK 中的上传图片过程连接起来"></a>1. 如何把图片上传到七牛的过程跟微信 SDK 中的上传图片过程连接起来</h3><p><strong><em>问题背景</em></strong><br>因为要把愿望的图片保存在七牛的服务器上，虽然七牛有自己的上传组件，但是那个上传组件点击后出现的是选择所有类型文件的界面，我希望上传图片的时候是那种选择相册或拍照的方式，也就是微信 SDK 提供的选择图片接口那样的功能，此时的难点在于怎样把通过微信 SDK 选择到的图片传给七牛。<br><strong><em>解决方案</em></strong><br>利用了微信 SDK 提供的上传图片接口和七牛的 fetch 接口，当微信选择了图片之后就把图片上传到微信服务器上，上传成功后会返回一个图片的下载链接，然后再用七牛的 fetch 接口向这个下载链接发送请求，获取到图片文件，然后存入七牛空间。</p>
+<h3 id="2-微信无故循环报-access-token-40001-错误"><a href="#2-微信无故循环报-access-token-40001-错误" class="headerlink" title="2. 微信无故循环报 access_token 40001 错误"></a>2. 微信无故循环报 access_token 40001 错误</h3><p><strong><em>问题背景</em></strong><br>许愿墙最后一天的时候男女功能反转，会出现一波用户请求的高峰，在 access_token 过期后，有多个用户同时请求了新的 access_token，access_token 在传输回服务器的过程中由于网络原因导致 access_token 返回的先后顺序跟请求的先后顺序不同，造成服务器缓存的是一个微信服务器不承认的 access_token（因为新请求的 access_token 会把前面的 access_token 覆盖）。<br><strong><em>解决方案</em></strong><br>增加错误处理，出现问题后清空 access_token 的缓存，然后重新请求新的 access_token。</p>
+<h3 id="3-BAE-多个执行单元导致-soket-io-报错"><a href="#3-BAE-多个执行单元导致-soket-io-报错" class="headerlink" title="3. BAE 多个执行单元导致 soket.io 报错"></a>3. BAE 多个执行单元导致 soket.io 报错</h3><p><strong><em>问题背景</em></strong><br>这个问题相当于开了多个 node 进程后 socket.io 的消息分配问题，由于有多条进程在运行后台，当有实时消息请求但此时通信双方请求的是不同进程的时候会导致 socket.io 报错。<br><strong><em>解决方案</em></strong><br>为了解决这个问题，我使用 redis 做了一个事件订阅/发布模型，多个服务器进程订阅发布进程，然后由发布进程统一处理所有的实时请求。</p>
+<h2 id="不足之处"><a href="#不足之处" class="headerlink" title="不足之处"></a>不足之处</h2><ol>
+<li>代码的优化不够，对 Angular 和 Node 掌握不够导致很多优化技巧没有用上；</li>
+<li>前期的规划不足导致开发中经常要对之前的代码进行重构；</li>
+<li>权限控制做得不好，没有花时间在这方面；</li>
+<li>开发节奏不够好，难以掌控进度。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Lowenshi
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://shijianwen.github.io/2016/03/01/许愿墙总结文档/" title="许愿墙总结文档">http://shijianwen.github.io/2016/03/01/许愿墙总结文档/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/27/浏览器事件模型/" rel="next" title="浏览器事件模型">
+                <i class="fa fa-chevron-left"></i> 浏览器事件模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/30/react-flux-redux/" rel="prev" title="浅谈 React、Flux 与 Redux">
+                浅谈 React、Flux 与 Redux <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+  <!-- 来必力City版安装代码 -->
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTEwOS83NjU4">
+    <script type="text/javascript">
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+
+        if (typeof LivereTower === 'function') { return; }
+
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  </div>
+  <!-- City版安装代码已完成 -->
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Lowenshi" />
+          <p class="site-author-name" itemprop="name">Lowenshi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShiJianwen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/shi-jian-wen-73" target="_blank" title="ZhiHu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      ZhiHu
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#技术选型"><span class="nav-number">1.</span> <span class="nav-text">技术选型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端："><span class="nav-number">1.1.</span> <span class="nav-text">前端：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后端："><span class="nav-number">1.2.</span> <span class="nav-text">后端：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库："><span class="nav-number">1.3.</span> <span class="nav-text">数据库：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他："><span class="nav-number">1.4.</span> <span class="nav-text">其他：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#技术难点"><span class="nav-number">2.</span> <span class="nav-text">技术难点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-如何把图片上传到七牛的过程跟微信-SDK-中的上传图片过程连接起来"><span class="nav-number">2.1.</span> <span class="nav-text">1. 如何把图片上传到七牛的过程跟微信 SDK 中的上传图片过程连接起来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-微信无故循环报-access-token-40001-错误"><span class="nav-number">2.2.</span> <span class="nav-text">2. 微信无故循环报 access_token 40001 错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-BAE-多个执行单元导致-soket-io-报错"><span class="nav-number">2.3.</span> <span class="nav-text">3. BAE 多个执行单元导致 soket.io 报错</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不足之处"><span class="nav-number">3.</span> <span class="nav-text">不足之处</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lowenshi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

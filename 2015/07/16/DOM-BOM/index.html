@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="石建文, 石建文的博客" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="石建文" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="BOMBOM 即是浏览器对象模型（Browser Object Model），它定义了 JavaScript 可以进行操作的浏览器的各个功能部件的接口，提供访问文档各个功能部件（如窗口本身、屏幕功能部件、浏览历史记录等）的途径以及操作方法。遗憾的是，BOM只是JavaScript脚本实现的一部分，没有任何相关的标准，每种浏览器都有自己的 BOM 实现，这是 BOM 最大的缺陷，在浏览器 JavaS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DOM &amp; BOM">
+<meta property="og:url" content="http://shijianwen.github.io/2015/07/16/DOM-BOM/index.html">
+<meta property="og:site_name" content="石建文">
+<meta property="og:description" content="BOMBOM 即是浏览器对象模型（Browser Object Model），它定义了 JavaScript 可以进行操作的浏览器的各个功能部件的接口，提供访问文档各个功能部件（如窗口本身、屏幕功能部件、浏览历史记录等）的途径以及操作方法。遗憾的是，BOM只是JavaScript脚本实现的一部分，没有任何相关的标准，每种浏览器都有自己的 BOM 实现，这是 BOM 最大的缺陷，在浏览器 JavaS">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://7xiuuj.com1.z0.glb.clouddn.com/EventLoop.png">
+<meta property="og:image" content="http://7xiuuj.com1.z0.glb.clouddn.com/1406945151689398.png">
+<meta property="og:image" content="http://7xiuuj.com1.z0.glb.clouddn.com/Location_URL.png">
+<meta property="og:image" content="http://7xiuuj.com1.z0.glb.clouddn.com/Navigator.png">
+<meta property="og:image" content="http://7xiuuj.com1.z0.glb.clouddn.com/UA.png">
+<meta property="og:image" content="http://7xiuuj.com1.z0.glb.clouddn.com/1406944676467640.png">
+<meta property="og:image" content="http://7xiuuj.com1.z0.glb.clouddn.com/63918611gw1ek0h01ps7yg20ve1rowjt.gif">
+<meta property="og:updated_time" content="2018-04-04T02:48:19.306Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DOM &amp; BOM">
+<meta name="twitter:description" content="BOMBOM 即是浏览器对象模型（Browser Object Model），它定义了 JavaScript 可以进行操作的浏览器的各个功能部件的接口，提供访问文档各个功能部件（如窗口本身、屏幕功能部件、浏览历史记录等）的途径以及操作方法。遗憾的是，BOM只是JavaScript脚本实现的一部分，没有任何相关的标准，每种浏览器都有自己的 BOM 实现，这是 BOM 最大的缺陷，在浏览器 JavaS">
+<meta name="twitter:image" content="http://7xiuuj.com1.z0.glb.clouddn.com/EventLoop.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://shijianwen.github.io/2015/07/16/DOM-BOM/"/>
+
+
+
+
+
+  <title>DOM & BOM | 石建文</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d361d5b48902151f1bf1968cd2f3b810";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">石建文</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Show you the code</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shijianwen.github.io/2015/07/16/DOM-BOM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lowenshi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="石建文">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">DOM & BOM</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-07-16T16:18:10+08:00">
+                2015-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="BOM"><a href="#BOM" class="headerlink" title="BOM"></a>BOM</h2><p>BOM 即是浏览器对象模型（Browser Object Model），它定义了 JavaScript 可以进行操作的浏览器的各个功能部件的接口，提供访问文档各个功能部件（如窗口本身、屏幕功能部件、浏览历史记录等）的途径以及操作方法。遗憾的是，BOM只是JavaScript脚本实现的一部分，没有任何相关的标准，每种浏览器都有自己的 BOM 实现，这是 BOM 最大的缺陷，在浏览器 JavaScript 中，BOM 主要有以下几个功能：</p>
+<p>◆关闭、移动浏览器及调整浏览器窗口大小；<br>◆弹出新的浏览器窗口；<br>◆提供浏览器详细信息的定位对象；<br>◆提供载入到浏览器窗口的文档详细信息的定位对象；<br>◆提供用户屏幕分辨率详细信息的屏幕对象；<br>◆提供对cookie的支持；<br>◆加入ActiveXObject类扩展BOM，通过JavaScript实例化ActiveX对象。</p>
+<a id="more"></a>
+<h3 id="Window对象"><a href="#Window对象" class="headerlink" title="Window对象"></a>Window对象</h3><p>在 BOM 中，Window 对象是所有对象的核心，它是 BOM 中所有对象的父对象。</p>
+<p><strong><em>1.全局的 Window 对象</em></strong><br>在浏览器中，Window 对象有双重角色，它既是通过 JavaScript 访问浏览器窗口的一个接口，又是 ECMAScript 规定的全局对象，所有全局变量和全局函数都会归类成 Window 对象的属性。但是虽说全局变量会自动变成 Window 对象的属性，但全局变量跟显式定义的 Window 对象属性还是有一些差别的，差别在于全局变量不可以用 delete 操作符删除而 Window 对象属性可以，代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;  <span class="comment">//定义一个全局变量</span></span><br><span class="line"><span class="built_in">window</span>.b = <span class="number">2</span>; <span class="comment">//定义一个 window 属性</span></span><br><span class="line"><span class="keyword">delete</span> a; <span class="comment">//输出 false</span></span><br><span class="line"><span class="built_in">console</span>.log(a); <span class="comment">//输出 1</span></span><br><span class="line"><span class="keyword">delete</span> <span class="built_in">window</span>.b; <span class="comment">//输出 true</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.b); <span class="comment">//undefined</span></span><br></pre></td></tr></table></figure></p>
+<p><strong><em>2.兼容问题</em></strong><br>由于 BOM 并没有一套系统的规范来约束它，所以在使用一些浏览器窗口的方法的时候需要对不同的浏览器进行兼容，以确定窗口位置的这个方法为例，在 IE、Safari、Opera 和 Chrome 浏览器下使用 screenLeft 和 screenTop 属性来获取窗口与屏幕左边和上边的距离，而在 FireFox 浏览器中则要通过 screenX 和 screenY 来获取，这种情况下为了能够在各种浏览器下都能正常使用这个方法，我们就需要改写代码去兼容各个浏览器，具体写法如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//IE、Safari、Opera 和 Chrome 使用 screenLeft 和 screenTop 属性</span></span><br><span class="line"><span class="comment">//Firefox 则使用 screenX 和 screenY</span></span><br><span class="line"><span class="keyword">var</span> leftPos = (<span class="keyword">typeof</span> <span class="built_in">window</span>.screenLeft == <span class="string">"number"</span>) ?</span><br><span class="line"><span class="built_in">window</span>.screenLeft : <span class="built_in">window</span>.screenX;</span><br><span class="line"><span class="keyword">var</span> topPos = (<span class="keyword">typeof</span> <span class="built_in">window</span>.screenTop == <span class="string">"number"</span>) ?</span><br><span class="line"><span class="built_in">window</span>.screenTop : <span class="built_in">window</span>.screenY;</span><br></pre></td></tr></table></figure></p>
+<p><strong><em>3.超时调用 setTimeout 和间歇调用 setInterval</em></strong><br>setTimeout 和 setInterval 都是 Window 对象中常用的方法，从名称上来看，超时调用 setTimeout 是在等待一段时间后去执行一个函数，它接收两个参数，第一个参数是要执行的函数，第二个参数是要等待的时长，它的单位是毫秒。间歇调用 setInterval 是每隔一段时间就执行一次函数，它也接收两个参数，两个参数跟 setTimeout 的一样。<br>setTimeout 和 setInterval 方法在调用的时候都会返回一个独一无二的数字 ID 用以识别当前的计时器，我们在代码中一般都会定义一个变量来保存这个数字 ID，以便给后来需要的 clearTimeout 和 clearInterval 传递参数。<br>setTimeout 和 setInterval 都有各自相对应的一个 clear 方法，分别是 clearTimeout 和 clearInterval，它们的作用是用来阻止超时调用和间歇调用的进行，它们都接收一个参数，就是上面说的数字 ID。对超时调用 setTimeout 来说，如果等待时间还没完的情况下就执行 clearTimeout 函数的话就会终止执行，如果等待时间已经完成的话则 clearTimeout 对其无效。clearInterval 比较简单，它就是用来终止间歇调用的循环的。<br>超时调用 setTimeout 的调用例子如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//调用例子如下</span></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">'哈哈哈'</span>);&#125;,<span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//每次调用都会返回一个独一无二的数字代码用于识别这个计时器，以用来取消</span></span><br><span class="line"><span class="comment">//取消计时器可使用 clearTimeout，参数为 setTimeout 返回的数字代码</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> timer = setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">"哈哈哈哈"</span>);&#125;,<span class="number">1000</span>);</span><br><span class="line">clearTimeout(timer);</span><br></pre></td></tr></table></figure></p>
+<p>间歇调用 setInterval 的调用例子如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个间歇调用例子</span></span><br><span class="line"><span class="keyword">var</span> num = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">var</span> max = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">var</span> intervalId = <span class="literal">null</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">incrementNumber</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">num++;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"蛤蛤"</span>);</span><br><span class="line"><span class="comment">//如果执行次数达到了 max 设定的值,则取消后续尚未执行的调用</span></span><br><span class="line"><span class="keyword">if</span> (num == max) &#123;</span><br><span class="line">clearInterval(intervalId);</span><br><span class="line">alert(<span class="string">"Done"</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">intervalId = setInterval(incrementNumber, <span class="number">500</span>);</span><br></pre></td></tr></table></figure>
+<p>我们还可以利用一些技巧使用超时调用 setTimeout 来模仿间歇调用 setInterval</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//可以使用超时调用来模拟间歇调用</span></span><br><span class="line"><span class="keyword">var</span> num = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">var</span> max = <span class="number">10</span>;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">incrementNumber</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">num++;</span><br><span class="line"><span class="comment">//如果执行次数未达到 max 设定的值,则设置另一次超时调用</span></span><br><span class="line"><span class="keyword">if</span> (num &lt; max) &#123;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"蛤蛤"</span>);</span><br><span class="line">setTimeout(incrementNumber, <span class="number">500</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">alert(<span class="string">"Done"</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">setTimeout(incrementNumber, <span class="number">500</span>);</span><br></pre></td></tr></table></figure>
+<p>此处有一个点需要注意，当使用 setInterval 的时候，如果处理的函数比较费时的话，会出现函数堆积的情况，因为 setInterval 的计时并不会等待函数执行完毕，也就是说，假设我的间隔时长为 500ms，而我的函数执行需要 1000ms，当我第一次调用的函数还没有执行完的时候，第二次调用又已经开始了，这样函数堆积起来不光影响性能，还会导致计时混乱，因为我们直观理解的间隔计时就是第一个函数执行完毕到第二个函数开始执行的这段时间。当使用 setTimeout 模拟的间歇调用的时候就不会出现这种情况，同时它的计时也是从一个函数结束开始计时的。所以一致推荐使用 setTimeout 来模拟间歇调用。</p>
+<p><strong><em>4.JavaScript 执行机制</em></strong></p>
+<p>既然说到了 setTimeout，那这里也就有必要提一下 JavaScript 的执行机制了，作为一门网页脚本语言，JavaScript 的用途决定了它单线程的命运，在单线程里，所有的代码都是同步执行的，也就是说，后面的代码必须要等待前面的代码执行完毕之后才能被执行到，这是一种效率极低方式，特别是当前面的代码有涉及到设备 IO 和数据库存取等耗时操作时，整个线程将会处于挂起状态，严重情况下甚至会导致整个网页失去响应，因为在等待状态的时候网页是没有办法响应用户操作的，这也就是常说的代码阻塞，特别是很多时候当处于阻塞状态时，CPU 的负载并不高，这就在另一方面造成了性能的浪费。超时调用 setTimeout 就是一个非常常见的阻塞操作，除此之外还有 Ajax 的异步请求以及 DOM 事件。</p>
+<p>JavaScript 的执行机制正是为了解决它的单线程的局限性而来的，它的基本想法是这样的：<br>对于那些比较耗时的操作（DOM，Ajax，setTimeout 这些），可以暂时把它们放到别的地方去让它们自己去执行，我的主线程继续执行这之后的代码，当那些耗时操作在另一个地方执行完毕的时候，再把该操作对应的回调函数加入到主线程中来去执行，这就是异步操作，所以在 JavaScript 代码里会同时存在同步任务和异步任务，同步任务指的是，在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务；异步任务是指不在主线程上执行的任务，它必须带有回调函数，用于异步任务执行完毕之后进行后续的处理。</p>
+<p>在 JavaScript 的底层实现中，执行机制一般有以下几步：<br>一、按顺序扫描代码，把所有同步任务加入主线程，形成一个执行栈；<br>二、把扫描到的异步任务另外执行，并在异步任务执行完毕后放入到一个“回调队列”中，处于等待被执行的状态；<br>三、当执行栈中的所有任务执行完毕时，系统就会读取”回调队列”，让最早排队的那个事件结束等待状态，进入执行栈，开始执行。<br>四、重复第三步。</p>
+<p>用图表示如下：<br><img src="http://7xiuuj.com1.z0.glb.clouddn.com/EventLoop.png" alt="此处输入图片的描述"><br>图中的 stack 即为执行栈，WebAPIs 为异步任务执行的地方，图下方是一个回调队列，回调队列与执行栈之间有一个“事件循环（Event Loop）”的东西，它是用来监视执行栈的，一旦执行栈里的任务全部执行完毕后，事件循环会马上从回调队列里取出一个位于队列头部的事件，把它丢进执行栈中执行。</p>
+<p>这里举一个执行机制的例子，我们知道 setTimeout 是异步任务的一种，在一开始它是不会进入执行栈的，我们先写一段代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;<span class="built_in">console</span>.log(<span class="string">'1'</span>);&#125;,<span class="number">0</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'2'</span>);</span><br></pre></td></tr></table></figure>
+<p>这段代码的第一行是一个超时调用 setTimeout，它是一个异步任务，第二行代码是一个控制台输出，它是一个同步任务。在执行的时候，setTimeout 不会进入执行栈，而是在别的地方进行它的计时，当计时结束后会进入回调队列等待被事件循环加进执行栈中执行，在这期间代码会继续往下执行，所以这段代码最终的运行结果是先在控制台输出 2，最后再在控制台输出 1。如果现在你能理解这个例子，那就说明你已经对执行机制有了初步的了解，在执行机制的基础上还有很多复杂的运用，后面我们还会遇到越来越难的东西。</p>
+<p>从上面这么多的解释我们还可以发现一个小特性，那就是</p>
+<p>由于事件机制的存在，使得 setTimeout 并不完全会在指定的时间后被执行，知道是为什么吗？因为当计时结束的时候，setTimeout 里面的函数只是被加到了回调队列里，除非此时执行栈是空的，否则就还会有一段等待的时间，当然这段时间也不光是等待执行栈清空的时间，也包含了等待回调队列前面的函数被执行的时间。</p>
+<h3 id="Location-对象"><a href="#Location-对象" class="headerlink" title="Location 对象"></a>Location 对象</h3><p>location 对象既是一个 Wwindow 对象的属性，也是一个 Ddocument 对象的属性，它可以访问当前浏览器 URL 的字符串信息，也可以通过更改浏览器位置信息来实现 URL 跳转等操作，具体看书，此处上图两张。<br><img src="http://7xiuuj.com1.z0.glb.clouddn.com/1406945151689398.png" alt="此处输入图片的描述"><br><img src="http://7xiuuj.com1.z0.glb.clouddn.com/Location_URL.png" alt="此处输入图片的描述"></p>
+<h3 id="Navigator-对象"><a href="#Navigator-对象" class="headerlink" title="Navigator 对象"></a>Navigator 对象</h3><p>Navigator 对象一般用来查看浏览器的各种版本信息，也可以用来检测插件，但最常用的还是用它查看浏览器的代理信息从来进行浏览器兼容。<br>方法：<br><img src="http://7xiuuj.com1.z0.glb.clouddn.com/Navigator.png" alt="此处输入图片的描述"></p>
+<p>用户代理信息：<br><img src="http://7xiuuj.com1.z0.glb.clouddn.com/UA.png" alt="此处输入图片的描述"></p>
+<p>除此之外，没有介绍的还有 Hhistory 对象和 Sscreen 对象，这几个都是不常用的，而且兼容问题也很严重，浏览器长年累月的各成一派已经使得拥有一个跨浏览器的解决方案的难度非常大。<br>其中，Hhistory 对象有如下特点<br><img src="http://7xiuuj.com1.z0.glb.clouddn.com/1406944676467640.png" alt="此处输入图片的描述"></p>
+<h3 id="浏览器兼容（客户端检测）"><a href="#浏览器兼容（客户端检测）" class="headerlink" title="浏览器兼容（客户端检测）"></a>浏览器兼容（客户端检测）</h3><p><strong><em>1.能力检测</em></strong><br>最常用也最为人们广泛接受的客户端检测形式是能力检测(又称特性检测)。能力检测的目标不是<br>识别特定的浏览器,而是识别浏览器的能力。采用这种方式不必顾及特定的浏览器如何,只要确定<br>浏览器支持特定的能力,就可以给出解决方案。能力检测的基本模式如下:<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//IE5.0 之前的版本不支持 document.getElementById() 这个 DOM 方法。尽管可以使</span></span><br><span class="line"><span class="comment">//用非标准的 document.all 属性实现相同的目的,但 IE 的早期版本中确实不存在 document.get-</span></span><br><span class="line"><span class="comment">//ElementById() 。于是,也就有了类似下面的能力检测代码:</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getElement</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">document</span>.getElementById) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">document</span>.getElementById(id);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">document</span>.all) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">document</span>.all[id];</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">"No way to retrieve element!"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//进行能力检测的时候一定要检测实际用到的特性，不能根据能力检测来判断当前浏览器</span></span><br><span class="line"><span class="comment">//最好使用 typeof 操作符去进行能力检测，因为你检测的目标很可能是某个对象的属性</span></span><br><span class="line"><span class="keyword">if</span>(object.sort)&#123;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">&#125;<span class="comment">//这样写是不对的，万一我有某个对象刚好有个属性叫做 sort 呢？</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">typeof</span> object.sort == <span class="string">'function'</span>) &#123;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">&#125;<span class="comment">//这样写比较好</span></span><br></pre></td></tr></table></figure></p>
+<p><strong><em>2.怪癖检测</em></strong><br>与能力检测类似,怪癖检测的目标是识别浏览器的特殊行为。但与能力检测确认浏览器支持什么能力不同,怪癖检测是想要知道浏览器存在什么缺陷(也就是 bug)。由于检测“怪癖”涉及运行代码,因此建议仅检测那些对你有直接影响的“怪癖”<br>,而且最好在脚本一开始就执行此类检测,以便尽早解决问题。</p>
+<p><strong><em>3.用户代理检测</em></strong><br>程序通过检测用户代理字符串来识别浏览器。用户代理字符串中包含大量与浏览器有关的信息,包括浏览器、平台、操作系统及浏览器版本。用户代理字符串有过一段相当长的发展历史,在此期间,浏览器提供商试图通过在用户代理字符串中添加一些欺骗性信息,欺骗网站相信自己的浏览器是另外一种浏览器。用户代理检测需要特殊的技巧,特别是要注意 Opera 会隐瞒其用户代理字符串的情况。即便如此,通过用户代理字符串仍然能够检测出浏览器所用的呈现引擎以及所在的平台,包括移动设备和游戏系统。</p>
+<p>在决定使用哪种客户端检测方法时,一般应优先考虑使用能力检测。怪癖检测是确定应该如何处理代码的第二选择。而用户代理检测则是客户端检测的最后一种方案,因为这种方法对用户代理字符串具有很强的依赖性（而用户代理字符串可能具有欺骗性）。</p>
+<h2 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h2><p>DOM 是文档对象模型 (Document Object Model) 是 HTML 和 XML 文档的编程接口。它提供了对文档的结构化的表述，并定义了一种方式可以使从程序中对该结构进行访问，从而改变文档的结构，样式和内容。DOM 将文档解析为一个由节点和对象（包含属性和方法的对象）组成的结构集合。简言之，它会将  Web 页面和脚本或程序语言连接起来。</p>
+<p>###节点类型<br>Node.ELEMENT_NODE (1);（元素节点）<br>Node.ATTRIBUTE_NODE (2);（属性节点）<br>Node.TEXT_NODE (3);（文本节点）<br>Node.CDATA_SECTION_NODE (4);<br>Node.ENTITY_REFERENCE_NODE (5);<br>Node.ENTITY_NODE (6);<br>Node.PROCESSING_INSTRUCTION_NODE (7);<br>Node.COMMENT_NODE (8);<br>Node.DOCUMENT_NODE (9);（文档节点）<br>Node.DOCUMENT_TYPE_NODE (10);<br>Node.DOCUMENT_FRAGMENT_NODE (11);<br>Node.NOTATION_NODE (12)。</p>
+<p>其中最重要的节点类型有三个：元素节点，属性节点，文本节点</p>
+<p>在确定元素节点类型的时候有两种写法：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一种是把节点的 nodeType 属性跟节点类型的名称作比较，这种方法在 IE 下不适用</span></span><br><span class="line"><span class="keyword">if</span> (someNode.nodeType == Node.ELEMENT_NODE) &#123; <span class="comment">//如果成立则是元素节点</span></span><br><span class="line">    alert(<span class="string">"Node is an element."</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//一般采用的是这第二种方法，跟节点类型对应的数字作比较</span></span><br><span class="line"><span class="keyword">if</span> (someNode.nodeType == <span class="number">1</span>)&#123;</span><br><span class="line">    alert(<span class="string">"Node is an element."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong><em>节点属性</em></strong><br>节点有三个最重要的属性：</p>
+<ol>
+<li>nodeName : 节点的名称</li>
+<li>nodeValue ：节点的值</li>
+<li>nodeType ：节点的类型</li>
+</ol>
+<p>一、nodeName 属性: 节点的名称，是只读的。</p>
+<ol>
+<li>元素节点的 nodeName 与标签名相同</li>
+<li>属性节点的 nodeName 是属性的名称</li>
+<li>文本节点的 nodeName 永远是 #text</li>
+<li>文档节点的 nodeName 永远是 #document</li>
+</ol>
+<p>二、nodeValue 属性：节点的值</p>
+<ol>
+<li>元素节点的 nodeValue 是 undefined 或 null</li>
+<li>文本节点的 nodeValue 是文本自身</li>
+<li>属性节点的 nodeValue 是属性的值</li>
+</ol>
+<p>三、nodeType 属性: 节点的类型，是只读的。以下常用的几种结点类型:<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">元素类型    节点类型</span><br><span class="line">   元素          <span class="number">1</span></span><br><span class="line">   属性          <span class="number">2</span></span><br><span class="line">   文本          <span class="number">3</span></span><br><span class="line">   注释          <span class="number">8</span></span><br><span class="line">   文档          <span class="number">9</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="节点关系"><a href="#节点关系" class="headerlink" title="节点关系"></a>节点关系</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">childNodes  <span class="comment">//访问当前元素的所有子节点</span></span><br><span class="line">firstChild  <span class="comment">//访问第一个子节点</span></span><br><span class="line">lastChild   <span class="comment">//访问最后一个子节点</span></span><br><span class="line">parentNode  <span class="comment">//访问父节点</span></span><br><span class="line">nextSibling <span class="comment">//访问下一个兄弟节点</span></span><br><span class="line">previousSibling <span class="comment">//访问前一个兄弟节点</span></span><br></pre></td></tr></table></figure>
+<h3 id="节点操作"><a href="#节点操作" class="headerlink" title="节点操作"></a>节点操作</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建节点的方法：</span></span><br><span class="line">createElement()</span><br><span class="line">createTextNode()</span><br><span class="line"></span><br><span class="line"><span class="comment">//向 chileNodes 末尾添加一个节点，返回值为新添加的这个节点</span></span><br><span class="line">appendChild ()</span><br><span class="line"><span class="keyword">var</span> returnedNode = someNode.appendChild(newNode);</span><br><span class="line">alert(returnedNode == newNode);<span class="comment">//true</span></span><br><span class="line">alert(someNode.lastChild == newNode);<span class="comment">//true</span></span><br><span class="line"><span class="comment">/*如果传入到 appendChild() 中的节点已经是文档的一部分了,那结果就是将该节点从原来的位置</span></span><br><span class="line"><span class="comment">转移到新位置。即使可以将 DOM 树看成是由一系列指针连接起来的,但任何 DOM 节点也不能同时出</span></span><br><span class="line"><span class="comment">现在文档中的多个位置上。因此,如果在调用 appendChild() 时传入了父节点的第一个子节点,那么</span></span><br><span class="line"><span class="comment">该节点就会成为父节点的最后一个子节点*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//把节点插入到某个子节点之前</span></span><br><span class="line">insertBefore() </span><br><span class="line"><span class="comment">/*这个方法接受两个参数:要插入的节点和作为参照的节点。插入节点后,被插入的节点会变成参照节点的前一个同胞节点( previousSibling ),同时被方法返回。如果参照节点是 null ,则 insertBefore() 与 appendChild() 执行相同的操作*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//插入后成为最后一个子节点</span></span><br><span class="line">returnedNode = someNode.insertBefore(newNode, <span class="literal">null</span>);</span><br><span class="line">alert(newNode == someNode.lastChild);<span class="comment">//true</span></span><br><span class="line"><span class="comment">//插入后成为第一个子节点</span></span><br><span class="line"><span class="keyword">var</span> returnedNode = someNode.insertBefore(newNode, someNode.firstChild);</span><br><span class="line">alert(returnedNode == newNode);<span class="comment">//true</span></span><br><span class="line">alert(newNode == someNode.firstChild); <span class="comment">//true</span></span><br><span class="line"><span class="comment">//插入到最后一个子节点前面</span></span><br><span class="line">returnedNode = someNode.insertBefore(newNode, someNode.lastChild);</span><br><span class="line">alert(newNode == someNode.childNodes[someNode.childNodes.length<span class="number">-2</span>]); <span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">replaceChild()</span><br><span class="line"><span class="comment">//replaceChild() 方法接受的两个参数是:要插入的节点和要替换的节点。要替换的节点将由这个方法返回并从文档树中//被移除,同时由要插入的节点占据其位置。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//替换第一个子节点</span></span><br><span class="line"><span class="keyword">var</span> returnedNode = someNode.replaceChild(newNode, someNode.firstChild);</span><br><span class="line"><span class="comment">//替换最后一个子节点</span></span><br><span class="line">returnedNode = someNode.replaceChild(newNode, someNode.lastChild);</span><br><span class="line"><span class="comment">//replaceChild 并不是将被替换的节点完全抹去，只是把它的指针替换，它本身并没有消失，还是真实存在的，但是文档中已经没有它的位置了</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//如果只想移除而非替换节点,可以使用 removeChild() 方法。这个方法接受一个参数,即要移除的节点。</span></span><br></pre></td></tr></table></figure>
+<h3 id="Document-操作"><a href="#Document-操作" class="headerlink" title="Document 操作"></a>Document 操作</h3><p>document.getElementById()<br>document.getElementsByTagName()<br>document.getElementsByName()</p>
+<h3 id="Element-操作"><a href="#Element-操作" class="headerlink" title="Element 操作"></a>Element 操作</h3><p>操作各个元素的属性的方法有两种：一种是用编程方式去访问节点对象，一种是用 Element 操作，Element 操作使用下面三种方法：<br><strong><em>getAttribute()</em></strong><br>接收一个参数，即需要获取值的属性名，该方法返回当前节点的目标属性的属性值。</p>
+<p><strong><em>setAttribute()</em></strong><br>接收两个参数，一个是属性名，第二个是属性值，用于设置当前节点的属性。</p>
+<p><strong><em>removeAttribute()</em></strong><br>接收一个参数，即属性名，移除当前节点的该属性。</p>
+<p>有两类特殊的特性,它们虽然有对应的属性名,但属性的值与通过 getAttribute() 返回的值并不相同。第一类特性就是 style ,用于通过 CSS 为元素指定样式。在通过 getAttribute() 访问时,返回的 style 特性值中包含的是 CSS 文本,而通过编程属性来访问它则会返回一个对象。</p>
+<p>第二类与众不同的特性是 onclick 这样的事件处理程序。当在元素上使用时, onclick 特性中包<br>含的是 JavaScript 代码,如果通过 getAttribute() 访问,则会返回相应代码的字符串。而在通过编程方式访问<br>onclick 属性时,则会返回一个 JavaScript 函数(如果未在元素中指定相应特性,则返回 null )<br>。这是因为 onclick 及其他事件处理程序属性本身就应该被赋予函数值。</p>
+<p>由于存在这些差别,在通过 JavaScript 以编程方式操作 DOM 时,开发人员经常不使用 getAttri-<br>bute() ,而是只使用对象的属性。</p>
+<p>这里先附一张 DOM 操作的思维导图，DOM 里面涉及到的操作都在图里：<br><img src="http://7xiuuj.com1.z0.glb.clouddn.com/63918611gw1ek0h01ps7yg20ve1rowjt.gif" alt="此处输入图片的描述"></p>
+<h3 id="DOM-拓展"><a href="#DOM-拓展" class="headerlink" title="DOM 拓展"></a>DOM 拓展</h3><p>querySelector 和 querySelectorAll<br>querySelector 和 querySelectorAll 是 DOM 选择符 API 里面新增的两个方法，它们支持以 CSS选择器 的形式去获取节点，这里不赘述。</p>
+<p>querySelectorAll 与 getElementsBy 方法最大的不同就是它返回的是一个静态的 nodeList，而 getElementsBy 系列方法返回的是一个动态的 nodeList，看代码：</p>
+<p><strong><em>HTML</em></strong><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong><em>JavaScript</em></strong><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Demo 1</span></span><br><span class="line"><span class="keyword">var</span> ul = <span class="built_in">document</span>.querySelectorAll(<span class="string">'ul'</span>)[<span class="number">0</span>],</span><br><span class="line">    lis = ul.querySelectorAll(<span class="string">"li"</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; lis.length ; i++)&#123;</span><br><span class="line">    ul.appendChild(<span class="built_in">document</span>.createElement(<span class="string">"li"</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*这里使用 querySelectorAll 来获取所有 li 元素，方法返回一个 nodeList，然后执行一个相当于 nodeList 长度的循环，每次循环都新增一个 li，这段代码最终就产生三个新的 li*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Demo 2</span></span><br><span class="line"><span class="keyword">var</span> ul = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'ul'</span>)[<span class="number">0</span>], </span><br><span class="line">    lis = ul.getElementsByTagName(<span class="string">"li"</span>); </span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; lis.length ; i++)&#123;</span><br><span class="line">    ul.appendChild(<span class="built_in">document</span>.createElement(<span class="string">"li"</span>)); </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*这里使用了 document.getElementsByTagName 来获取 li 元素，同样执行一个 nodeList 长度的循环，但是这段代码会进入死循环，原因在于使用 document.getElementsByTagName 所返回的是一个动态的 nodeList，即 lis 变量是动态的，我每次访问这个变量，它都会重新计算新的值并且更新，所以我的 for 循环里每一次访问 lis.length，它都是不一样的，因为每次循环 lis 的长度都会增加，这样就使这段代码陷入的死循环，而上面的 querySelectorAll 方法恰恰相反，它返回的是一个静态 nodeList，它们两者之间最大的区别就在于此 */</span></span><br></pre></td></tr></table></figure></p>
+<p>PS：这篇博文篇幅比较长，因为客户端 JavaScript 的内容实在不少，本文也只是选取了其中比较常用并且重要的知识进行介绍，要想全面理解客户端 JavaScript 还是要好好看书。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Document_Object_Model/Introduction" target="_blank" rel="noopener">JavaScript DOM 概述</a><br><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html" target="_blank" rel="noopener">JavaScript 运行机制详解：再谈Event Loop</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Lowenshi
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://shijianwen.github.io/2015/07/16/DOM-BOM/" title="DOM & BOM">http://shijianwen.github.io/2015/07/16/DOM-BOM/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/13/Git简易教程/" rel="next" title="Git简易教程">
+                <i class="fa fa-chevron-left"></i> Git简易教程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/07/18/javascript-this/" rel="prev" title="JavaScript学习笔记之 this 关键字">
+                JavaScript学习笔记之 this 关键字 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+  <!-- 来必力City版安装代码 -->
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTEwOS83NjU4">
+    <script type="text/javascript">
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+
+        if (typeof LivereTower === 'function') { return; }
+
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  </div>
+  <!-- City版安装代码已完成 -->
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Lowenshi" />
+          <p class="site-author-name" itemprop="name">Lowenshi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShiJianwen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/shi-jian-wen-73" target="_blank" title="ZhiHu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      ZhiHu
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BOM"><span class="nav-number">1.</span> <span class="nav-text">BOM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Window对象"><span class="nav-number">1.1.</span> <span class="nav-text">Window对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Location-对象"><span class="nav-number">1.2.</span> <span class="nav-text">Location 对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Navigator-对象"><span class="nav-number">1.3.</span> <span class="nav-text">Navigator 对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器兼容（客户端检测）"><span class="nav-number">1.4.</span> <span class="nav-text">浏览器兼容（客户端检测）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM"><span class="nav-number">2.</span> <span class="nav-text">DOM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#节点关系"><span class="nav-number">2.1.</span> <span class="nav-text">节点关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点操作"><span class="nav-number">2.2.</span> <span class="nav-text">节点操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Document-操作"><span class="nav-number">2.3.</span> <span class="nav-text">Document 操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Element-操作"><span class="nav-number">2.4.</span> <span class="nav-text">Element 操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM-拓展"><span class="nav-number">2.5.</span> <span class="nav-text">DOM 拓展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lowenshi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

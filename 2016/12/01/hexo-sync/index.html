@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="石建文, 石建文的博客" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="石建文" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="&amp;emsp;&amp;emsp;hexo 是一个优秀的静态博客工具，唯一的不足就是源文件无法同步，让人几乎只能在一台电脑上写博客，为了解决这个问题，我们可以使用 Github 来管理我们的 hexo 源文件，具体思路就是：在我们博客的远程仓库中新建一个分支，用这个分支来存储博客的源文件，这样我们每次在更新博客并部署之后可以顺手多执行两条命令将源文件同步到远程分支中去，不需要做任何环境切换的操作，还可以将部">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hexo 博客利用 github 分支同步源文件">
+<meta property="og:url" content="http://shijianwen.github.io/2016/12/01/hexo-sync/index.html">
+<meta property="og:site_name" content="石建文">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;hexo 是一个优秀的静态博客工具，唯一的不足就是源文件无法同步，让人几乎只能在一台电脑上写博客，为了解决这个问题，我们可以使用 Github 来管理我们的 hexo 源文件，具体思路就是：在我们博客的远程仓库中新建一个分支，用这个分支来存储博客的源文件，这样我们每次在更新博客并部署之后可以顺手多执行两条命令将源文件同步到远程分支中去，不需要做任何环境切换的操作，还可以将部">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://shijianwen.github.io/images/1480585048966.png">
+<meta property="og:image" content="http://shijianwen.github.io/images/1480586433661.png">
+<meta property="og:updated_time" content="2018-04-04T02:48:19.309Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hexo 博客利用 github 分支同步源文件">
+<meta name="twitter:description" content="&amp;emsp;&amp;emsp;hexo 是一个优秀的静态博客工具，唯一的不足就是源文件无法同步，让人几乎只能在一台电脑上写博客，为了解决这个问题，我们可以使用 Github 来管理我们的 hexo 源文件，具体思路就是：在我们博客的远程仓库中新建一个分支，用这个分支来存储博客的源文件，这样我们每次在更新博客并部署之后可以顺手多执行两条命令将源文件同步到远程分支中去，不需要做任何环境切换的操作，还可以将部">
+<meta name="twitter:image" content="http://shijianwen.github.io/images/1480585048966.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://shijianwen.github.io/2016/12/01/hexo-sync/"/>
+
+
+
+
+
+  <title>hexo 博客利用 github 分支同步源文件 | 石建文</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d361d5b48902151f1bf1968cd2f3b810";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">石建文</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Show you the code</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shijianwen.github.io/2016/12/01/hexo-sync/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lowenshi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="石建文">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">hexo 博客利用 github 分支同步源文件</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-01T18:29:10+08:00">
+                2016-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/博客日志/" itemprop="url" rel="index">
+                    <span itemprop="name">博客日志</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>&emsp;&emsp;hexo 是一个优秀的静态博客工具，唯一的不足就是源文件无法同步，让人几乎只能在一台电脑上写博客，为了解决这个问题，我们可以使用 Github 来管理我们的 hexo 源文件，具体思路就是：在我们博客的远程仓库中新建一个分支，用这个分支来存储博客的源文件，这样我们每次在更新博客并部署之后可以顺手多执行两条命令将源文件同步到远程分支中去，不需要做任何环境切换的操作，还可以将部署和同步操作写成一个命令脚本，自动执行以上命令。建立同步的过程很简单：</p>
+<a id="more"></a>
+<h4 id="初始化版本库-amp-建立仓库关联（已与远程仓库关联的可忽略这一步）"><a href="#初始化版本库-amp-建立仓库关联（已与远程仓库关联的可忽略这一步）" class="headerlink" title="初始化版本库&amp;建立仓库关联（已与远程仓库关联的可忽略这一步）"></a>初始化版本库&amp;建立仓库关联（已与远程仓库关联的可忽略这一步）</h4><p>&emsp;&emsp;一般根据 hexo 教程一步步建立起来的博客都没有跟自己的远程仓库建立关联，查看是否关联的方法是输入 <code>git remote</code> 看是否有关联的远程仓库：<br><img src="/images/1480585048966.png" alt="Alt text"><br>可以看到我这里有一个名叫 origin 的仓库与我本地的文件夹关联，如果当前还没有关联，先用 <code>git init</code> 命令将你的本地文件夹初始化成一个版本库，然后使用 <code>git remote add origin 你的github仓库地址</code> 命令来建立与远程仓库的关联，这里的 origin 是你定义的远程仓库在本地的名字，你也可以叫别的，一般命名成 origin，这样就建立好了关联了，使用刚刚的 <code>git remote</code> 命令检测会看到你关联的仓库。</p>
+<h4 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h4><p>&emsp;&emsp;像正常提交文件那样使用 <code>git add</code> 、 <code>git commit</code>  和 <code>git push</code> 命令提交文件，但这里在 push 的时候要注意新建一个分支去存你要提交的源文件，具体命令是 <code>git push -u origin HEAD:分支名</code>，这里的分支名自己取，HEAD 是版本库的头指针的意思，代表本地版本库里面的最新版本，origin 是刚刚你自己添加远程关联时候的名字，如果你的不是叫 origin 就写成自己定义的名字， -u 参数是为了建立本地分支与远程分支的关联，以后 push 的时候直接输入 <code>git push</code> 就可以了，所以这整个命令的意思就是：<code>把本地最新版本的代码提交到远程仓库的某个分支上去，如果远程仓库还没有这个分支，就在远程仓库里新建一个分支，然后将它跟本地当前分支关联起来</code>。提交之后你就会发现自己的 github 仓库多了一条分支，就是你刚刚提交的那个分支。<br>&emsp;&emsp;至于这里为什么不先在 github 上面手动建立分支，然后再在本地建立关联，是因为如果是远程手动建立分支会自动以 master 分支为模板建立一份一模一样的文件，而我们仓库里面 master 分支存的都是经过 hexo 编译的文件，跟源文件完全不一样，新建这样一个分支之后还要手动把里面的文件删掉，另一个原因是如果在远程手动建分支，你在本地还得手动用 <code>git fetch origin</code> 拉取远程分支的更新，然后再手动建立与分支的关联，比较麻烦，当然如果你是刚开始部署 hexo，github 仓库里面还一点东西都没有的话这些问题都不存在，那就随意。</p>
+<h4 id="设置默认分支"><a href="#设置默认分支" class="headerlink" title="设置默认分支"></a>设置默认分支</h4><p>&emsp;&emsp;最后我们需要把你新建的那个分支设置成 github 的默认分支，这样做的原因是为了你以后在别的机器上拉取代码的时候能够直接拉取源文件，不用再指定分支。<br><img src="/images/1480586433661.png" alt="Alt text"><br>在这里选择好默认分支之后，update就行了。现在你就可以使用 github 来同步自己的 hexo 博客源文件啦~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Lowenshi
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://shijianwen.github.io/2016/12/01/hexo-sync/" title="hexo 博客利用 github 分支同步源文件">http://shijianwen.github.io/2016/12/01/hexo-sync/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/29/android-vertical-align/" rel="next" title="Android 浏览器文本垂直居中问题">
+                <i class="fa fa-chevron-left"></i> Android 浏览器文本垂直居中问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/05/arrow-function/" rel="prev" title="【译】使用箭头函数精简你的 Vue 模块">
+                【译】使用箭头函数精简你的 Vue 模块 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+  <!-- 来必力City版安装代码 -->
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTEwOS83NjU4">
+    <script type="text/javascript">
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+
+        if (typeof LivereTower === 'function') { return; }
+
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  </div>
+  <!-- City版安装代码已完成 -->
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Lowenshi" />
+          <p class="site-author-name" itemprop="name">Lowenshi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShiJianwen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/shi-jian-wen-73" target="_blank" title="ZhiHu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      ZhiHu
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化版本库-amp-建立仓库关联（已与远程仓库关联的可忽略这一步）"><span class="nav-number">1.</span> <span class="nav-text">初始化版本库&amp;建立仓库关联（已与远程仓库关联的可忽略这一步）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#提交文件"><span class="nav-number">2.</span> <span class="nav-text">提交文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置默认分支"><span class="nav-number">3.</span> <span class="nav-text">设置默认分支</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lowenshi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

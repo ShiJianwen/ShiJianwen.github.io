@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="石建文, 石建文的博客" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="石建文" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="原文链接：https://dotdev.co/clean-up-your-vue-modules-with-es6-arrow-functions-2ef65e348d41#.vkndfgci3众成翻译地址：http://www.zcfy.cc/article/clean-up-your-vue-modules-with-es6-arrow-functions-dotdev-1872.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】使用箭头函数精简你的 Vue 模块">
+<meta property="og:url" content="http://shijianwen.github.io/2016/12/05/arrow-function/index.html">
+<meta property="og:site_name" content="石建文">
+<meta property="og:description" content="原文链接：https://dotdev.co/clean-up-your-vue-modules-with-es6-arrow-functions-2ef65e348d41#.vkndfgci3众成翻译地址：http://www.zcfy.cc/article/clean-up-your-vue-modules-with-es6-arrow-functions-dotdev-1872.html">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-04T02:48:19.308Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】使用箭头函数精简你的 Vue 模块">
+<meta name="twitter:description" content="原文链接：https://dotdev.co/clean-up-your-vue-modules-with-es6-arrow-functions-2ef65e348d41#.vkndfgci3众成翻译地址：http://www.zcfy.cc/article/clean-up-your-vue-modules-with-es6-arrow-functions-dotdev-1872.html">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://shijianwen.github.io/2016/12/05/arrow-function/"/>
+
+
+
+
+
+  <title>【译】使用箭头函数精简你的 Vue 模块 | 石建文</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d361d5b48902151f1bf1968cd2f3b810";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">石建文</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Show you the code</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shijianwen.github.io/2016/12/05/arrow-function/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lowenshi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="石建文">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">【译】使用箭头函数精简你的 Vue 模块</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-05T15:46:10+08:00">
+                2016-12-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/外文翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">外文翻译</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>原文链接：<a href="https://dotdev.co/clean-up-your-vue-modules-with-es6-arrow-functions-2ef65e348d41#.vkndfgci3" target="_blank" rel="noopener">https://dotdev.co/clean-up-your-vue-modules-with-es6-arrow-functions-2ef65e348d41#.vkndfgci3</a><br>众成翻译地址：<a href="http://www.zcfy.cc/article/clean-up-your-vue-modules-with-es6-arrow-functions-dotdev-1872.html" target="_blank" rel="noopener">http://www.zcfy.cc/article/clean-up-your-vue-modules-with-es6-arrow-functions-dotdev-1872.html</a></p>
+</blockquote>
+<p>最近在重构一个用 Vue1.0 写的项目，我通过使用 ES6 的箭头函数来让代码在不升级 Vue2.0 的情况下变得更加简洁和统一。在这个过程中我也遇到了很多坑，所以想借此机会分享一下我从中学到的东西以及总结出来的一些规范，这些规范以后都将会落实到我的 Vue 项目中。</p>
+<a id="more"></a>
+<p>我们最好还是通过代码示例来讲解，下面给出一段代码，我们一步一步来分析它</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// require vue-resource...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line"></span><br><span class="line">  data: &#123;</span><br><span class="line">      item: &#123;</span><br><span class="line">        title: <span class="string">''</span>,</span><br><span class="line">        description: <span class="string">''</span>,</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  methods: &#123;</span><br><span class="line"></span><br><span class="line">    saveItem: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">let</span> vm = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">this</span>.$http.post(<span class="string">'item'</span>, <span class="keyword">this</span>.item)</span><br><span class="line">        .then(</span><br><span class="line"></span><br><span class="line">          <span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">            vm.item.title = <span class="string">''</span>;</span><br><span class="line">            vm.item.description = <span class="string">''</span>;</span><br><span class="line">          &#125;, </span><br><span class="line"></span><br><span class="line">          <span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'error'</span>, response);</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上面给出的这段代码实现了一个表单提交逻辑，用户提交表单之后发送请求在数据库新建一个数据项。但即使是这么简单的逻辑，其中也还有很多可以优化的地方。</p>
+<hr>
+<h3 id="箭头函数和-this-关键字"><a href="#箭头函数和-this-关键字" class="headerlink" title="箭头函数和 this 关键字"></a>箭头函数和 this 关键字</h3><p>先来看一下代码中的 <code>saveItem</code> 方法：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">saveItem: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> vm = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">this</span>.$http.post(<span class="string">'item'</span>, <span class="keyword">this</span>.item)</span><br><span class="line">  .then(</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">      vm.item.title = <span class="string">''</span>;</span><br><span class="line">      vm.item.description = <span class="string">''</span>;</span><br><span class="line">    &#125;, </span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'error'</span>, response);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>开发中我经常很不爽的就是总是要把 <code>this</code> 关键字存起来，像上面的 <code>vm = this</code> 这个变量定义就是为了待会我们能够不受函数执行上下文影响地获取到 Vue 实例对象。假如有一种方法能够让我们彻底摆脱这种声明并且函数能够自动继承 this 关键字，岂不美哉？幸运的是，现在我们完全可以实现这个想法，因为有<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="noopener">箭头函数</a>。</p>
+<p>在使用箭头函数的时候，<code>this</code> 是一个常量，这意味着现在的 this 不再动态指向当前的执行上下文了，而是继承了外围作用域。这意味着我们可以把上面代码中的 promise 回调函数用一种更加简洁的方法来重写并且不需要用临时变量来存储 this 就能取到 Vue 实例对象：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">saveItem</span>: function() &#123;</span><br><span class="line"></span><br><span class="line">  // let vm = this;</span><br><span class="line"></span><br><span class="line">  this.$http.post('item', this.item)</span><br><span class="line">   .then(</span><br><span class="line"></span><br><span class="line">    //function (response) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">    response =&gt; &#123;</span><br><span class="line">     this.item.title = '';</span><br><span class="line">     this.item.description = '';</span><br><span class="line">    &#125;, </span><br><span class="line"></span><br><span class="line">    //function (response) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">    response =&gt; &#123;</span><br><span class="line">     console.log('error', response);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看起来很不错吧！</p>
+<hr>
+<h3 id="滥用箭头函数"><a href="#滥用箭头函数" class="headerlink" title="滥用箭头函数"></a>滥用箭头函数</h3><p>使用箭头函数的确很酷，但是不是每个地方用它都这么好呢？有些人可能不喜欢每次都声明一个 <code>function() {}</code> 所以把它们都用箭头函数的 <code>() =&gt; {}</code> 来简写。所以刚刚的 <code>saveItem()</code> 方法还可以改写成这样：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">methods</span>: &#123;</span><br><span class="line">  <span class="attribute">saveItem</span>: () =&gt; &#123;</span><br><span class="line">    this.$http.<span class="built_in">post</span>(<span class="string">'item'</span>, this.item)</span><br><span class="line">      .<span class="built_in">then</span>(</span><br><span class="line">        // callbacks in here</span><br><span class="line">      );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你会觉得这样改写后简直完美，整个代码都变得特别简洁，但是这样你将会踩到一个坑。</p>
+<p>现在 <code>saveItem()</code> 方法里面的 <code>this</code> 指向的是 <code>window</code> 而不是我们希望的 Vue 实例对象（因为是继承外围作用域的this），当我们想要在给函数传递 <code>this.item</code> 整个参数的时候，你会发现它获取的是 <code>window.item</code>。</p>
+<hr>
+<h3 id="方法定义"><a href="#方法定义" class="headerlink" title="方法定义"></a>方法定义</h3><p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions" target="_blank" rel="noopener">ES6</a> 约定了一种新的函数定义方式，可以直接把函数名当成函数的声明，像下面这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  foo: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;,</span><br><span class="line">  bar: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// with ES6 method definitions, this becomes</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  foo() &#123;&#125;,</span><br><span class="line">  bar() &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>所以我们可以用这种方法来简写我们的 <code>saveItem()</code> 方法，同时也不会出现刚刚箭头函数带来的 this 继承的问题。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">methods: &#123;</span><br><span class="line">  saveItem() &#123;</span><br><span class="line">    <span class="keyword">this</span>.$http.post(<span class="string">'item'</span>, <span class="keyword">this</span>.item)</span><br><span class="line">      .then(</span><br><span class="line">        <span class="comment">// callbacks in here</span></span><br><span class="line">      );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>如果你觉得还不够简洁的话，可以按照这个方法改写所有 Vue 实例对象里面的顶级方法（<code>data</code> 和 <code>created</code> 这些）</p>
+<hr>
+<h3 id="data-相关"><a href="#data-相关" class="headerlink" title="data 相关"></a>data 相关</h3><p>在我们的代码里，我们的 <code>data</code> 是一个对象字面量。如果你熟悉 Vue 的话你会发现我们在真正开发的时候会把 <code>data</code> 这个对象当做闭包 return 回来。官方文档和<a href="http://codebyjeff.com/blog/2016/11/vue-js-simple-tuts-component" target="_blank" rel="noopener">这篇博客</a>有解释为什么这样做（译者注：这里要返回闭包是为了保证组件内部的状态独立，避免多个相同组件共用一个 data）。</p>
+<p>我们刚刚了解到了很多优化的点，还知道了箭头函数里面的 this 是一个常量，它继承自外围作用域，除此之外，箭头函数还有一些<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="noopener">函数体定义</a>的新特性，前面的例子中我们定义函数体的时候用的是传统的块级结构方法（花括号包裹），箭头函数中我们可以使用一种更加简洁的代码结构来定义函数体，看下面的两段代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sum = <span class="function">(<span class="params">a,b</span>) =&gt;</span> &#123;<span class="keyword">return</span> a+b;&#125;  <span class="comment">// 传统块级结构，必须要有 return</span></span><br><span class="line"><span class="keyword">var</span> sum = <span class="function">(<span class="params">a,b</span>) =&gt;</span> a+b;           <span class="comment">// 简单结构，不用声明 return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sum = <span class="function">(<span class="params">a,b</span>) =&gt;</span> (&#123;<span class="attr">sum</span>: a+b&#125;);  <span class="comment">// 如果要返回一个对象字面量，则必须用括号包裹</span></span><br></pre></td></tr></table></figure>
+<p>当你的函数只返回一个值的时候，可以直接把值写上，不再需要以往的花括号和 <code>return</code> 了，但如果需要返回一个对象字面量的话，就必须把你要返回的对象用括号包裹起来（译者注：花括号是运算符，声明这是一个计算值，否则会把对象字面量的花括号认为是箭头函数的函数体声明）。</p>
+<p>我很喜欢这个小改动，另外你也可以使用 ES6 的函数定义方法来写</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// method definition style</span></span><br><span class="line"><span class="params">...</span></span><br><span class="line"><span class="built_in">data</span>() &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    item: &#123;</span><br><span class="line">      title: <span class="string">''</span>,</span><br><span class="line">      description: <span class="string">''</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="params">...</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="Vue-ES6-规范"><a href="#Vue-ES6-规范" class="headerlink" title="Vue ES6 规范"></a>Vue ES6 规范</h3><p>踩过那么多坑之后，我总结出了以下几条 Vue 模块定义规范：</p>
+<ol>
+<li><p>使用 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Method_definitions" target="_blank" rel="noopener">ES6 方法定义规范</a>来定义所有顶层方法</p>
+</li>
+<li><p>使用<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="noopener">箭头函数</a>定义所有在顶层方法里面的回调函数</p>
+</li>
+<li><p>使用<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#Function_body" target="_blank" rel="noopener">“简单结构”</a>来定义 <code>data</code> 的函数体</p>
+</li>
+</ol>
+<p>希望这些规范能够让你的 Vue 模块代码和组件更加吸引人并且更加可读，Thx！</p>
+<hr>
+<h3 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h3><p><a href="https://rainsoft.io/when-not-to-use-arrow-functions-in-javascript/" target="_blank" rel="noopener">https://rainsoft.io/when-not-to-use-arrow-functions-in-javascript/</a></p>
+<hr>
+<p><em>Originally published at</em> <a href="https://gist.github.com/JacobBennett/7b32b4914311c0ac0f28a1fdc411b9a7" target="_blank" rel="noopener"><em>gist.github.com</em></a>_._</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Lowenshi
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://shijianwen.github.io/2016/12/05/arrow-function/" title="【译】使用箭头函数精简你的 Vue 模块">http://shijianwen.github.io/2016/12/05/arrow-function/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/01/hexo-sync/" rel="next" title="hexo 博客利用 github 分支同步源文件">
+                <i class="fa fa-chevron-left"></i> hexo 博客利用 github 分支同步源文件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/22/最近几天的博客变化/" rel="prev" title="最近几天的博客变化">
+                最近几天的博客变化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+  <!-- 来必力City版安装代码 -->
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTEwOS83NjU4">
+    <script type="text/javascript">
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+
+        if (typeof LivereTower === 'function') { return; }
+
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  </div>
+  <!-- City版安装代码已完成 -->
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Lowenshi" />
+          <p class="site-author-name" itemprop="name">Lowenshi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShiJianwen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/shi-jian-wen-73" target="_blank" title="ZhiHu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      ZhiHu
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#箭头函数和-this-关键字"><span class="nav-number">1.</span> <span class="nav-text">箭头函数和 this 关键字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#滥用箭头函数"><span class="nav-number">2.</span> <span class="nav-text">滥用箭头函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法定义"><span class="nav-number">3.</span> <span class="nav-text">方法定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-相关"><span class="nav-number">4.</span> <span class="nav-text">data 相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vue-ES6-规范"><span class="nav-number">5.</span> <span class="nav-text">Vue ES6 规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脚注"><span class="nav-number">6.</span> <span class="nav-text">脚注</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lowenshi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

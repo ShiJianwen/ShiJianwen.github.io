@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="石建文, 石建文的博客" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="石建文" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="执行环境和作用域链&amp;emsp;&amp;emsp;执行环境和作用域链是 JavaScript 里最重要的一个概念，在讲它们之前，先简单解释一下两个名词：‘变量对象’和‘活动对象’。 &amp;emsp;&amp;emsp;变量对象&amp;emsp;&amp;emsp;变量对象是当代码执行流进入作用域时创建的一个包含该作用域内所有变量和函数声明的对象（注意：函数表达式不在此列）。&amp;emsp;&amp;emsp;活动对象&amp;emsp;&amp;emsp;活">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript学习笔记之深入理解执行环境与作用域链">
+<meta property="og:url" content="http://shijianwen.github.io/2015/04/06/JavaScript学习笔记之深入理解执行环境与作用域链/index.html">
+<meta property="og:site_name" content="石建文">
+<meta property="og:description" content="执行环境和作用域链&amp;emsp;&amp;emsp;执行环境和作用域链是 JavaScript 里最重要的一个概念，在讲它们之前，先简单解释一下两个名词：‘变量对象’和‘活动对象’。 &amp;emsp;&amp;emsp;变量对象&amp;emsp;&amp;emsp;变量对象是当代码执行流进入作用域时创建的一个包含该作用域内所有变量和函数声明的对象（注意：函数表达式不在此列）。&amp;emsp;&amp;emsp;活动对象&amp;emsp;&amp;emsp;活">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-04T02:48:19.307Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript学习笔记之深入理解执行环境与作用域链">
+<meta name="twitter:description" content="执行环境和作用域链&amp;emsp;&amp;emsp;执行环境和作用域链是 JavaScript 里最重要的一个概念，在讲它们之前，先简单解释一下两个名词：‘变量对象’和‘活动对象’。 &amp;emsp;&amp;emsp;变量对象&amp;emsp;&amp;emsp;变量对象是当代码执行流进入作用域时创建的一个包含该作用域内所有变量和函数声明的对象（注意：函数表达式不在此列）。&amp;emsp;&amp;emsp;活动对象&amp;emsp;&amp;emsp;活">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://shijianwen.github.io/2015/04/06/JavaScript学习笔记之深入理解执行环境与作用域链/"/>
+
+
+
+
+
+  <title>JavaScript学习笔记之深入理解执行环境与作用域链 | 石建文</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d361d5b48902151f1bf1968cd2f3b810";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">石建文</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Show you the code</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shijianwen.github.io/2015/04/06/JavaScript学习笔记之深入理解执行环境与作用域链/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lowenshi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="石建文">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">JavaScript学习笔记之深入理解执行环境与作用域链</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-06T15:33:10+08:00">
+                2015-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="执行环境和作用域链"><a href="#执行环境和作用域链" class="headerlink" title="执行环境和作用域链"></a>执行环境和作用域链</h2><p>&emsp;&emsp;执行环境和作用域链是 JavaScript 里最重要的一个概念，在讲它们之前，先简单解释一下两个名词：‘变量对象’和‘活动对象’。</p>
+<p>&emsp;&emsp;<strong>变量对象</strong><br>&emsp;&emsp;变量对象是当代码执行流进入作用域时创建的一个包含该作用域内所有变量和函数声明的对象（<strong>注意：函数表达式不在此列</strong>）。<br>&emsp;&emsp;<strong>活动对象</strong><br>&emsp;&emsp;活动对象是函数执行时创建的一个对象，这个对象包含函数的形参以及所有局部变量，它跟上面的变量对象正好是相对关系。<br><a id="more"></a></p>
+<p>&emsp;&emsp;在 JavaScript 里，执行环境定义了变量或函数有权访问的其他数据，决定了它们各自的行为（<strong><em>比如在一个函数内部是无法访问该函数的子函数的内部变量的，因为在这个父函数的执行环境里没有定义子函数中的任何数据</em></strong>）。每个执行环境都有自己对应的一个变量对象，全局环境是处于最外围的一个执行环境（<strong><em>一般认为就是 Window 对象</em></strong>），当一个执行环境的所有代码执行完之后，该执行环境和它里面的变量都会被销毁（<strong><em>全局环境在应用程序退出时才会被销毁</em></strong>）。每个 JavaScript 函数也都有自己的执行环境，当代码执行流进入一个函数时，函数的执行环境会被压入环境栈里，直到函数执行完毕才会将其弹出，并把控制权交给之前的执行环境。<br>&emsp;&emsp;当代码执行流进入一个环境时，会创建一个该环境变量对象的作用域链（<strong><em>如果遇到函数则用函数环境中的活动对象当做变量对象</em></strong>），用来保证访问变量和函数的顺序（<strong><em>就像变量查找一样，首先会在当前作用域查找，如果没有，再去父作用域找</em></strong>）。当前执行环境的变量对象始终位于作用域链的最前端，往后一个变量对象是当前执行环境的外部环境，再后一个变量对象则是更外面的环境，这样一直延续到全局执行环境，就形成了一条完整的作用域链，要注意全局环境的变量对象始终都是作用域链中的最后一个对象。<br>&emsp;&emsp;变量查找的过程就是沿着作用域链从最前端开始一级一级往后查找的过程，一直到全局作用域为止，如果全局环境中依然没有定义这个变量，那么就会返回 Undefined 或者严格模式下报错。同时由于执行环境的存在，使得父作用域无法访问子作用域，而子作用域却能够访问父作用域中的任何变量和函数。</p>
+<p>&emsp;&emsp;试分析以下代码</p>
+<pre><code>var name = &quot;Sibarone&quot;;
+function Func1 () {
+    var age = 20;
+    function Func2 () {
+        var tempName = name;
+        console.log(&quot;My name is &quot; + tempName + &quot;,&quot; + age);
+    }
+    Func2();
+}
+Func1();
+</code></pre><p>&emsp;&emsp;上面的代码一共包含了三个执行环境，分别是 Func2、Func1 和全局执行环境，全局环境里的变量对象包含了变量 <code>name</code> 和函数 <code>Func1</code>；Func1的执行环境里定义了变量 <code>age</code> 和函数 <code>Func2</code>，同时该环境可以访问全局环境里的所有变量；Func2的执行环境里定义了变量 <code>tempName</code>，这个变量只能在该环境被访问，无法被外部环境访问，但是这个环境可以访问它的所有外部环境的变量，外部的任何变量对它都是公开的。</p>
+<h2 id="延长作用域链"><a href="#延长作用域链" class="headerlink" title="延长作用域链"></a>延长作用域链</h2><p>&emsp;&emsp;JavaScript 的作用域链除了局部环境和全局环境的组合之外，还可以人为延长作用域链，具体来说，就是当代码执行流进入 <code>with</code> 或者 <code>try...catch</code> 语句时，作用域链都会得到延长：</p>
+<p>&emsp;&emsp;<strong><em>with语句</em></strong><br>&emsp;&emsp;在 JavaScript 中，with 语句用于设置代码当前对象的执行环境，用代码表示如下：</p>
+<pre><code>var name = &quot;Sibarone&quot;; //全局定义一个变量
+var someObject = {
+    name: &quot;ShiJianwen&quot; //定义一个内部变量
+}
+with (someObject) {
+    console.log(name); //输出”ShiJianwen“；
+}
+console.log(name);    //输出”Sibarone“
+</code></pre><p>&emsp;&emsp;上面的代码中有两个输出语句，正常情况下都是应该输出 Sibarone 的，因为它是一个全局变量，但是使用了 with 语句后当前代码的执行环境被强行变成了 someObject，所以此时在 with 语句里输出的名字就应该是 someObject 中定义的 name 变量。到这里我想大家都明白 with 延长作用域链的原理了吧？其实就是 with 语句在更改执行环境的时候会把这个执行环境的变量对象推入到作用域链的最前端，上面代码就是把 someObject 的环境的变量对象推到整个作用域链的最前端，使得变量查找的时候在作用域链的最前端就能找到 name 变量，这样就不会访问到全局的 name 变量了。</p>
+<p>&emsp;&emsp;<strong><em>try…catch语句</em></strong><br>&emsp;&emsp;try 和 catch 语句在 JavaScript 中总是成对出现的，它们的作用主要是检查代码的语法错误，拼写错误和各种不可预知因素导致的错误。try 语句用来测试代码的错误，catch 语句用来处理错误，经常跟 try…catch 一起使用的还有 throw 语句，throw 语句主要用来抛出错误，完成自定义的错误提示。更多关于 try…catch 语句的知识可以看[这里][1]。在运行 try…catch 语句的时候，catch 语句块的执行环境会生成一个新的变量对象加入到作用域链的前端从而达到延长作用域链的目的。用代码表示如下：</p>
+<pre><code>try {
+    allert(&quot;abc&quot;);  //写一段出错的代码
+}
+catch (err) {   //错误被捕捉到后会执行这里的 catch 语句
+    console.log(err.message);   //访问错误对象，输出错误信息
+}
+console.log(err.message); //报错 not defined，无法访问
+</code></pre><p>&emsp;&emsp;如果你对我刚刚说的变量查找规则还有点印象的话那相信你也看懂了在这里 catch 语句确实延长了作用域链，在变量查找的过程中，总是会先从作用域链的最前端开始查起，一直追溯到全局环境的变量对象，在上面的代码中，假设如果 catch 语句没有延长作用域链，那么我在最后一行（catch 语句外部）输出错误信息时应该是不会报错的（<strong><em>因为 JavaScript 没有块级作用域这一说法，<code>注1</code> 解释这点</em></strong>），因为大家都处于同一个作用域中，变量查找是能找到本作用域的所有变量的，但事实却是代码报错，想想变量查找的时候为什么会报错？原因就是真正 err 对象根本不在本作用域里！也不在父作用域里，它被定义在当前输出环境的子作用域里，也就是作用域链的最前端！它里面的错误对象组成了一个新的变量对象然后被加到作用域的最前端。这就证明了代码的作用域的确是被延长了。</p>
+<p>&emsp;&emsp;注1：在类 C 语言中，由花括号封闭的代码会形成自己的块级作用域（JavaScript 叫它执行环境），在花括号外部是无法访问花括号内部的任何变量的，但是在 JavaScript 中没有块级作用域这一说法，在花括号外部依然能够访问花括号内部的变量，当然函数的花括号除外，因为函数有自己的执行环境。同样要注意的是在讲 catch 语句能够延长作用域链时只是针对 catch 语句捕获的错误对象 err 来说的，如果在 catch 语句块里面定义一个变量，在 catch 外还是能够访问的，原因同上（块级作用域问题）。<br>&emsp;&emsp;注2：在 IE8 及其之前版本中，catch 语句执行后捕获到的错误对象不会被新增进一个变量对象然后加入作用域链前端，而是直接被加到当前执行环境的变量对象中去，所以在 catch 语句外部也能访问错误对象 err，但在 IE9 中修复了这个 Bug。<br>  [1]: <a href="http://www.w3school.com.cn/js/js_errors.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/js/js_errors.asp</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Lowenshi
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://shijianwen.github.io/2015/04/06/JavaScript学习笔记之深入理解执行环境与作用域链/" title="JavaScript学习笔记之深入理解执行环境与作用域链">http://shijianwen.github.io/2015/04/06/JavaScript学习笔记之深入理解执行环境与作用域链/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/04/02/JS数组的深拷贝/" rel="next" title="JavaScript学习笔记之数组的深拷贝">
+                <i class="fa fa-chevron-left"></i> JavaScript学习笔记之数组的深拷贝
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/04/11/JavaScript学习笔记之浅析几种创建对象的方法/" rel="prev" title="JavaScript学习笔记之浅析几种创建对象的方法">
+                JavaScript学习笔记之浅析几种创建对象的方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+  <!-- 来必力City版安装代码 -->
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTEwOS83NjU4">
+    <script type="text/javascript">
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+
+        if (typeof LivereTower === 'function') { return; }
+
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  </div>
+  <!-- City版安装代码已完成 -->
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Lowenshi" />
+          <p class="site-author-name" itemprop="name">Lowenshi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShiJianwen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/shi-jian-wen-73" target="_blank" title="ZhiHu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      ZhiHu
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行环境和作用域链"><span class="nav-number">1.</span> <span class="nav-text">执行环境和作用域链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#延长作用域链"><span class="nav-number">2.</span> <span class="nav-text">延长作用域链</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lowenshi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
