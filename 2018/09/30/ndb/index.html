@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="好东西," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="石建文" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="原文链接：Debugging Node.js Application Using ndb   Google Chrome 实验室发布了一款新的 node debug 工具来提升开发者体验，本文将会全面介绍 ndb 这款 node 工具  熟悉 node 的人可能知道，node 一直支持一个无头调试工具:  它使用了一个已经被弃用的协议叫做 V8 调试器协议，并且它并不算是一个功能完备的调试器，只">
+<meta name="keywords" content="好东西">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】使用 ndb 调试 node 应用">
+<meta property="og:url" content="http://shijianwen.github.io/2018/09/30/ndb/index.html">
+<meta property="og:site_name" content="石建文">
+<meta property="og:description" content="原文链接：Debugging Node.js Application Using ndb   Google Chrome 实验室发布了一款新的 node debug 工具来提升开发者体验，本文将会全面介绍 ndb 这款 node 工具  熟悉 node 的人可能知道，node 一直支持一个无头调试工具:  它使用了一个已经被弃用的协议叫做 V8 调试器协议，并且它并不算是一个功能完备的调试器，只">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/ajNVdqHZLLApzPeccD5DzWfU7farOgGkl30x5CyEqC1MDibmZBYWBfQ/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/Q3auHgzwzM4FhfQWKaBM0IP6ZRQKQlVgTouqWQpibLvoGYBq1H0GgUw/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/Q3auHgzwzM53dKibCr4eYObJ8PHomd0qAHpCaJfkD7JUd3074MkPt1A/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/Q3auHgzwzM6KiaaY5icSmrOHibLUC6ws55tW8ibnXsem7oDXmwAYb2LJicg/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/Q3auHgzwzM61pUyUWsSOc4Dwbswso2LKAF49WygwWhgA2aB5mzznJw/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/ajNVdqHZLLBAK93Uqhfjz4152uwlzeQtUViclM7tiawtxfNsOadybEaw/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/ajNVdqHZLLBmnHl7odggDfFWPfIGWD5cic8hLpH02sZ03PVy46QAOrQ/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/Q3auHgzwzM6vpUibtDxHJljiagXjRXXibwSmiafvtyVIjtrPQo7SDQqtfg/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/Q3auHgzwzM4wvA0hVIP6MnD5AibIT35ezbjovw9fqibKhJ75fBQ5Gufw/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/ajNVdqHZLLB9ZtAVpkH5X9dEwdSxchd4VfsEIiaNIC7uPbhve4liarFw/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/ajNVdqHZLLDh8ickQzgN576V99756qxNSq9WhErXp6nqxvlY0uzLBHA/">
+<meta property="og:image" content="https://qpic.url.cn/feeds_pic/Q3auHgzwzM5IRAVnoQE9aBsLFW2hdYck77KrlqQAmI2ARicmPx9OU9A/">
+<meta property="og:updated_time" content="2018-10-09T03:18:44.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】使用 ndb 调试 node 应用">
+<meta name="twitter:description" content="原文链接：Debugging Node.js Application Using ndb   Google Chrome 实验室发布了一款新的 node debug 工具来提升开发者体验，本文将会全面介绍 ndb 这款 node 工具  熟悉 node 的人可能知道，node 一直支持一个无头调试工具:  它使用了一个已经被弃用的协议叫做 V8 调试器协议，并且它并不算是一个功能完备的调试器，只">
+<meta name="twitter:image" content="https://qpic.url.cn/feeds_pic/ajNVdqHZLLApzPeccD5DzWfU7farOgGkl30x5CyEqC1MDibmZBYWBfQ/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://shijianwen.github.io/2018/09/30/ndb/"/>
+
+
+
+
+
+  <title>【译】使用 ndb 调试 node 应用 | 石建文</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d361d5b48902151f1bf1968cd2f3b810";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">石建文</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Show you the code</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://shijianwen.github.io/2018/09/30/ndb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lowenshi">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/default_avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="石建文">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">【译】使用 ndb 调试 node 应用</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-30T16:14:10+08:00">
+                2018-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node-js/" itemprop="url" rel="index">
+                    <span itemprop="name">node.js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-eye"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>原文链接：<a href="https://nitayneeman.com/posts/debugging-nodejs-application-in-chrome-devtools-using-ndb/" target="_blank" rel="noopener">Debugging Node.js Application Using ndb</a></p>
+</blockquote>
+<blockquote>
+<p>Google Chrome 实验室发布了一款新的 node debug 工具来提升开发者体验，本文将会全面介绍 ndb 这款 node 工具</p>
+</blockquote>
+<p>熟悉 node 的人可能知道，node 一直支持一个无头调试工具:</p>
+<p><img src="https://qpic.url.cn/feeds_pic/ajNVdqHZLLApzPeccD5DzWfU7farOgGkl30x5CyEqC1MDibmZBYWBfQ/" alt="node 原生无头调试器"></p>
+<p>它使用了一个已经被弃用的协议叫做 V8 调试器协议，并且它并不算是一个功能完备的调试器，只有一些简单的检查功能。</p>
+<p>过去在这种情况下，一个新的基于 V8 调试器协议和 Blink 的调试工具出现在开发者眼前，它能够允许我们在任何一个 Webkit 内核的浏览器 DevTools 上面调试我们的 node 应用，是的，它就是 node-inspector，它的出现大幅增加了我们调试 node 应用的效率。</p>
+<p>在 node 的 V6.3.0 版本中，V8 Inspector 作为一个实验特性被加入到这个版本中，它带来了一个非常强大的调试协议，同时还集成了 Chrome 的 DevTools 并且支持非常多的新特性如Blackbox、profiling、workspaces和sourcemap等等。此外，它并不依赖已经被弃用的 V8 调试器协议，而是直接基于 Chrome 的调试协议，因此它可以直接跑在调试客户端里面，像 Chromium 内核浏览器、VSC ode、WebStorm这些。启动它也非常简单，只需要输入命令 <code>node --inspect scrip.js</code> 即可。</p>
+<p>在 7.20 号的时候，一个叫做 ndb 的全新 node 调试工具也同步开源了。</p>
+<p>有新的 node 调试工具的确令人振奋，但这个新的 ndb 拥有哪些新特性呢？</p>
+<h2 id="ndb-出现的背景"><a href="#ndb-出现的背景" class="headerlink" title="ndb 出现的背景"></a>ndb 出现的背景</h2><p>首先附上 ndb 的官方定义：</p>
+<blockquote>
+<p>ndb is an improved debugging experience for Node.js, enabled by Chrome DevTools<br>（ndb 是一次对 node 调试体验的升级，Chrome DevTools 原生支持 ndb）</p>
+</blockquote>
+<p>从上面的定义中，我们可以发现：</p>
+<ol>
+<li>ndb 能够提升调试体验</li>
+<li>Chrome DevTools 原生支持 ndb，意味着它使用的是 Chrome 的调试协议，类似于 V8 Inspector</li>
+<li>ndb是谷歌 Chrome 实验室维护的</li>
+</ol>
+<p>因此，你可能认为 ndb 只是提供了一个升级版的 V8 Inspector ，然而事实并非如此。</p>
+<p>我们可以发现，使用 V8 Inspector 和 Chrome DevTools 有两个前提：一是 node 版本要大于 6.3.0，另一个是必须要用 Chrome 或者 Chromium 内核的浏览器。如果我们不满足这两个条件或者想在非 Chromium 内核下调试的话怎么办呢？</p>
+<p>前面我们没说到 ndb 的使用依赖什么环境，它依赖一个叫做 <code>Puppeteer</code> 的包，Puppeteer 是一个通过 Chrome DevTools 协议来控制 Chromium 的包，它提供了很多封装好的接口。</p>
+<center><br><br><img src="https://qpic.url.cn/feeds_pic/Q3auHgzwzM4FhfQWKaBM0IP6ZRQKQlVgTouqWQpibLvoGYBq1H0GgUw/" alt="Puppeteer is a dependency of ndb"><br><br></center>
+
+<p>当 ndb 安装了 Puppeteer 之后，一个最新的与当前环境兼容的 Chromium 也被安装到了依赖包里。</p>
+<p>因为是独立安装的，所以 ndb 不依赖操作系统的浏览器，这种对浏览器不依赖的特性也成为了 ndb 的一个优势。</p>
+<p>但它同时也带来一个问题，那就是 node_modules 会比较大，毕竟里面有一个 Chromium。</p>
+<p>那么 ndb 在调试上的体验如何呢？</p>
+<h2 id="探索ndb"><a href="#探索ndb" class="headerlink" title="探索ndb"></a>探索ndb</h2><p>第一步我们先用 express 建一个 node 应用 demo：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// app.js</span></span><br><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/'</span>, (req, res) =&gt; res.send(<span class="string">'Hello World!'</span>));</span><br><span class="line"></span><br><span class="line">app.listen(<span class="number">3000</span>, () =&gt; <span class="built_in">console</span>.info(<span class="string">'Example app listening on port 3000!'</span>));</span><br></pre></td></tr></table></figure>
+<p>再在 package.json 定义一个运行脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">"scripts"</span>: &#123;</span><br><span class="line">  <span class="string">"start"</span>: <span class="string">"node app.js"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="如何安装"><a href="#如何安装" class="headerlink" title="如何安装"></a>如何安装</h3><p>首先我们在全局环境或者本地安装 ndb。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">npm install -g ndb</span><br></pre></td></tr></table></figure>
+<h3 id="启动ndb"><a href="#启动ndb" class="headerlink" title="启动ndb"></a>启动ndb</h3><p>我们有好几种方法启动 ndb：</p>
+<h4 id="1️⃣-直接执行文件"><a href="#1️⃣-直接执行文件" class="headerlink" title="1️⃣  - 直接执行文件"></a>1️⃣  - 直接执行文件</h4><p>我们可以通过直接用 ndb 命令执行一个文件来开启 ndb，如：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="selector-tag">ndb</span> <span class="selector-tag">app</span><span class="selector-class">.js</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://qpic.url.cn/feeds_pic/Q3auHgzwzM53dKibCr4eYObJ8PHomd0qAHpCaJfkD7JUd3074MkPt1A/" alt="Debugging a script file directly"></p>
+<h4 id="2️⃣-运行一个二进制可执行文件"><a href="#2️⃣-运行一个二进制可执行文件" class="headerlink" title="2️⃣ - 运行一个二进制可执行文件"></a>2️⃣ - 运行一个二进制可执行文件</h4><p>有时候我们想要用 ndb 来调试一些可执行二进制文件启动的服务，如 npm 脚本、webpack、单元测试这些。</p>
+<p>只需要执行如下命令：</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ndb <span class="built_in">npm</span> start</span><br></pre></td></tr></table></figure>
+<p>上面我们用 ndb 运行了一个 npm 脚本，同样的，只要配置妥当我们还可以运行 <code>ndb webpack</code> 或 <code>ndb mocha</code> 等命令</p>
+<p><img src="https://qpic.url.cn/feeds_pic/Q3auHgzwzM6KiaaY5icSmrOHibLUC6ws55tW8ibnXsem7oDXmwAYb2LJicg/" alt="Debugging by running npm script"></p>
+<h4 id="3️⃣-运行一个项目"><a href="#3️⃣-运行一个项目" class="headerlink" title="3️⃣ - 运行一个项目"></a>3️⃣ - 运行一个项目</h4><p>如果我们只是需要打开一个 ndb 服务，可以直接在项目目录里面执行 <code>ndb .</code> 来打开，这个命令允许我们在执行脚本之前设置断点、编辑文件或其他任何东西。</p>
+<p><img src="https://qpic.url.cn/feeds_pic/Q3auHgzwzM61pUyUWsSOc4Dwbswso2LKAF49WygwWhgA2aB5mzznJw/" alt="Debugging a project"></p>
+<p>PS：接下来的示例我们都采用第三种启动方法来示范</p>
+<h3 id="放置断点"><a href="#放置断点" class="headerlink" title="放置断点"></a>放置断点</h3><p>在调试的时候放置断点非常简单</p>
+<p><img src="https://qpic.url.cn/feeds_pic/ajNVdqHZLLBAK93Uqhfjz4152uwlzeQtUViclM7tiawtxfNsOadybEaw/" alt="Placing a breakpoint on the HTTP response"></p>
+<p>我们可以在模块被实际加载之前就放置断点</p>
+<h3 id="处理文件"><a href="#处理文件" class="headerlink" title="处理文件"></a>处理文件</h3><p>使用 Chrome DevTools，我们可以在项目中创建和编辑文件，并将它们保存</p>
+<p><img src="https://qpic.url.cn/feeds_pic/ajNVdqHZLLBmnHl7odggDfFWPfIGWD5cic8hLpH02sZ03PVy46QAOrQ/" alt="Changing the source code of a script file
+"></p>
+<h3 id="运行-npm-脚本"><a href="#运行-npm-脚本" class="headerlink" title="运行 npm 脚本"></a>运行 npm 脚本</h3><p>如果项目中包含一些 npm 脚本，可以通过 ndb 的面板中运行</p>
+<p>![Running an npm script]<a href="https://qpic.url.cn/feeds_pic/ajNVdqHZLLCCqn70fPBokRibIfgaMI0CmRA12NrqaEziadRICOVvl8iaA/" target="_blank" rel="noopener">https://qpic.url.cn/feeds_pic/ajNVdqHZLLCCqn70fPBokRibIfgaMI0CmRA12NrqaEziadRICOVvl8iaA/</a>)</p>
+<h3 id="内置终端"><a href="#内置终端" class="headerlink" title="内置终端"></a>内置终端</h3><p>通过 ndb 也可以直接访问终端</p>
+<p><img src="https://qpic.url.cn/feeds_pic/Q3auHgzwzM6vpUibtDxHJljiagXjRXXibwSmiafvtyVIjtrPQo7SDQqtfg/" alt="Opening the built-in terminal panel"></p>
+<h3 id="Blackboxing"><a href="#Blackboxing" class="headerlink" title="Blackboxing"></a>Blackboxing</h3><p>在默认情况下，ndb 会屏蔽一些外部文件，如 node 内置库，我们调试的时候对这些外部文件并不需要关心</p>
+<p><img src="https://qpic.url.cn/feeds_pic/Q3auHgzwzM4wvA0hVIP6MnD5AibIT35ezbjovw9fqibKhJ75fBQ5Gufw/" alt="Blackboxing the module loader of Node.js"></p>
+<h3 id="进程面板"><a href="#进程面板" class="headerlink" title="进程面板"></a>进程面板</h3><p>这个面板会列出当前由 ndb 启动的所有 node 进程。此外，子进程会收拢到它的父进程中，方便管理和终止</p>
+<p><img src="https://qpic.url.cn/feeds_pic/ajNVdqHZLLB9ZtAVpkH5X9dEwdSxchd4VfsEIiaNIC7uPbhve4liarFw/" alt="Terminating a child and parent process by single click"></p>
+<h3 id="代码片段"><a href="#代码片段" class="headerlink" title="代码片段"></a>代码片段</h3><p>ndb 支持创建一些代码片段来执行和调试</p>
+<p><img src="https://qpic.url.cn/feeds_pic/ajNVdqHZLLDh8ickQzgN576V99756qxNSq9WhErXp6nqxvlY0uzLBHA/" alt="Creating and executing a snippet"></p>
+<h3 id="变量访问"><a href="#变量访问" class="headerlink" title="变量访问"></a>变量访问</h3><p>当前进程变量和 node 的全局变量，ndb 都可以访问到</p>
+<p><img src="https://qpic.url.cn/feeds_pic/Q3auHgzwzM5IRAVnoQE9aBsLFW2hdYck77KrlqQAmI2ARicmPx9OU9A/" alt="Logging `process` object to Console"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    Lowenshi
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://shijianwen.github.io/2018/09/30/ndb/" title="【译】使用 ndb 调试 node 应用">http://shijianwen.github.io/2018/09/30/ndb/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/好东西/" rel="tag"># 好东西</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/02/flutter/" rel="next" title="Flutter 初探">
+                <i class="fa fa-chevron-left"></i> Flutter 初探
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+  <!-- 来必力City版安装代码 -->
+  <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTEwOS83NjU4">
+    <script type="text/javascript">
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+
+        if (typeof LivereTower === 'function') { return; }
+
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  </div>
+  <!-- City版安装代码已完成 -->
+  <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+  <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/default_avatar.jpg"
+               alt="Lowenshi" />
+          <p class="site-author-name" itemprop="name">Lowenshi</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ShiJianwen" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/shi-jian-wen-73" target="_blank" title="ZhiHu">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      ZhiHu
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ndb-出现的背景"><span class="nav-number">1.</span> <span class="nav-text">ndb 出现的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#探索ndb"><span class="nav-number">2.</span> <span class="nav-text">探索ndb</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何安装"><span class="nav-number">2.1.</span> <span class="nav-text">如何安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动ndb"><span class="nav-number">2.2.</span> <span class="nav-text">启动ndb</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1️⃣-直接执行文件"><span class="nav-number">2.2.1.</span> <span class="nav-text">1️⃣  - 直接执行文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2️⃣-运行一个二进制可执行文件"><span class="nav-number">2.2.2.</span> <span class="nav-text">2️⃣ - 运行一个二进制可执行文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3️⃣-运行一个项目"><span class="nav-number">2.2.3.</span> <span class="nav-text">3️⃣ - 运行一个项目</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#放置断点"><span class="nav-number">2.3.</span> <span class="nav-text">放置断点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理文件"><span class="nav-number">2.4.</span> <span class="nav-text">处理文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行-npm-脚本"><span class="nav-number">2.5.</span> <span class="nav-text">运行 npm 脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内置终端"><span class="nav-number">2.6.</span> <span class="nav-text">内置终端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Blackboxing"><span class="nav-number">2.7.</span> <span class="nav-text">Blackboxing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程面板"><span class="nav-number">2.8.</span> <span class="nav-text">进程面板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码片段"><span class="nav-number">2.9.</span> <span class="nav-text">代码片段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#变量访问"><span class="nav-number">2.10.</span> <span class="nav-text">变量访问</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lowenshi</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.2</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
